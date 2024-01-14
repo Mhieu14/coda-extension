@@ -1,0 +1,42 @@
+env:
+  node: true
+  es2023: true
+parser: "@typescript-eslint/parser"
+parserOptions:
+  project: "./tsconfig.json"
+plugins:
+  - "@typescript-eslint"
+  - "simple-import-sort"
+  - "import"
+  - "unused-imports"
+extends:
+  - "eslint:recommended"
+  - "plugin:import/errors"
+  - "plugin:import/warnings"
+  - "plugin:@typescript-eslint/eslint-recommended"
+  - "plugin:@typescript-eslint/recommended-type-checked"
+  - "plugin:react/recommended"
+  - "plugin:react/jsx-runtime"
+  - "plugin:react-hooks/recommended"
+  - "prettier"
+settings:
+  import/parsers:
+    "@typescript-eslint/parser": [".ts"]
+  import/resolver:
+    typescript: {}
+  react:
+    version: "detect"
+rules:
+  simple-import-sort/imports:
+    - "error"
+    - groups:
+        - ["^\\u0000"]
+        - ["^@?\\w"]
+        - ["^src/.*$"]
+        - ["^\\."]
+  simple-import-sort/exports: "error"
+  unused-imports/no-unused-imports: "error"
+  no-unused-vars: "off"
+  "@typescript-eslint/no-unused-vars":
+    - "warn"
+    - argsIgnorePattern: "^_"
