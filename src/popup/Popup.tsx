@@ -1,37 +1,42 @@
-import { useEffect, useState } from "react";
+import {
+  Container,
+  Heading,
+  Icon,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  VStack,
+} from "@chakra-ui/react";
+import { BsFillGearFill } from "react-icons/bs";
+
+import { Settings } from "./Settings.tsx";
 
 export const Popup = () => {
-  const [count, setCount] = useState(0);
-
-  const minus = () => {
-    if (count > 0) setCount(count - 1);
-  };
-
-  const add = () => setCount(count + 1);
-
-  useEffect(() => {
-    chrome.storage.sync.get(["count"], (result) => {
-      setCount(result.count || 0);
-    });
-  }, []);
-
-  useEffect(() => {
-    chrome.storage.sync.set({ count });
-    chrome.runtime.sendMessage({ type: "COUNT", count });
-  }, [count]);
-
   return (
-    <main>
-      <h3>Popup Page</h3>
-      <div className="calc">
-        <button onClick={minus} disabled={count <= 0}>
-          -
-        </button>
-        <label>{count}</label>
-        <button onClick={add}>+</button>
-      </div>
-    </main>
+    <Container width="sm" paddingX={0}>
+      <Tabs isFitted variant="enclosed-colored" defaultIndex={1}>
+        <TabList mb="1em">
+          <Tab>One</Tab>
+          <Tab>
+            <VStack>
+              <Icon as={BsFillGearFill} boxSize={6} />
+              <Heading as="h1" size="md">
+                Settings
+              </Heading>
+            </VStack>
+          </Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel>
+            <p>one!</p>
+          </TabPanel>
+          <TabPanel>
+            <Settings />
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
+    </Container>
   );
 };
-
-export default Popup;
