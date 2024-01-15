@@ -1,8 +1,10 @@
 import {
   Button,
+  Container,
   FormControl,
   FormErrorMessage,
   FormLabel,
+  Heading,
   Input,
   InputGroup,
   InputRightElement,
@@ -52,7 +54,7 @@ export const Settings = () => {
       title: "Saved",
       status: "success",
       duration: 2000,
-      position: "top",
+      position: "top-right",
     });
 
     reset(values);
@@ -61,30 +63,36 @@ export const Settings = () => {
   const [show, setShow] = useBoolean(false);
 
   return (
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <VStack alignItems="flex-start" spacing={4}>
-        <FormControl isInvalid={Boolean(errors.token)}>
-          <FormLabel htmlFor="token">API token</FormLabel>
-          <InputGroup>
-            <Input
-              id="token"
-              autoComplete="off"
-              type={show ? "text" : "password"}
-              {...register("token")}
-            />
-            <InputRightElement width="4.5rem">
-              <Button h="1.75rem" size="sm" onClick={setShow.toggle}>
-                {show ? "Hide" : "Show"}
-              </Button>
-            </InputRightElement>
-          </InputGroup>
-          <FormErrorMessage>{errors.token?.message}</FormErrorMessage>
-        </FormControl>
-        <Button colorScheme="teal" type="submit" isDisabled={!isDirty}>
-          Submit
-        </Button>
+    <Container width="md" padding={4}>
+      <VStack alignItems="stretch" spacing={4}>
+        <Heading as="h1">Settings</Heading>
+
+        {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <VStack alignItems="flex-start" spacing={4}>
+            <FormControl isInvalid={Boolean(errors.token)}>
+              <FormLabel htmlFor="token">API token</FormLabel>
+              <InputGroup>
+                <Input
+                  id="token"
+                  autoComplete="off"
+                  type={show ? "text" : "password"}
+                  {...register("token")}
+                />
+                <InputRightElement width="4.5rem">
+                  <Button h="1.75rem" size="sm" onClick={setShow.toggle}>
+                    {show ? "Hide" : "Show"}
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
+              <FormErrorMessage>{errors.token?.message}</FormErrorMessage>
+            </FormControl>
+            <Button colorScheme="teal" type="submit" isDisabled={!isDirty}>
+              Submit
+            </Button>
+          </VStack>
+        </form>
       </VStack>
-    </form>
+    </Container>
   );
 };
