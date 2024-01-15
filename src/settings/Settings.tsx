@@ -19,7 +19,10 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { z } from "zod";
 
 const settingsDataSchema = z.object({
-  token: z.string().min(1, "API token must not be empty"),
+  token: z
+    .string()
+    .min(1, "API token must not be empty")
+    .max(64, "API token must contain at most 64 characters"),
 });
 
 type SettingsData = z.infer<typeof settingsDataSchema>;
