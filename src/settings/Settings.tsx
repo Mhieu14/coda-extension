@@ -5,6 +5,7 @@ import {
   FormErrorMessage,
   FormLabel,
   Heading,
+  IconButton,
   Input,
   InputGroup,
   InputRightElement,
@@ -14,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { z } from "zod";
 
 const settingsDataSchema = z.object({
@@ -79,10 +81,15 @@ export const Settings = () => {
                   type={show ? "text" : "password"}
                   {...register("token")}
                 />
-                <InputRightElement width="4.5rem">
-                  <Button h="1.75rem" size="sm" onClick={setShow.toggle}>
-                    {show ? "Hide" : "Show"}
-                  </Button>
+                <InputRightElement>
+                  <IconButton
+                    icon={show ? <FaRegEyeSlash /> : <FaRegEye />}
+                    isRound
+                    variant="ghost"
+                    size="sm"
+                    aria-label={show ? "Hide API token" : "Show API token"}
+                    onClick={setShow.toggle}
+                  />
                 </InputRightElement>
               </InputGroup>
               <FormErrorMessage>{errors.token?.message}</FormErrorMessage>
