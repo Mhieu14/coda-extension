@@ -16,27 +16,18 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import { z } from "zod";
 
-const settingsDataSchema = z.object({
-  token: z
-    .string()
-    .min(1, "API token must not be empty")
-    .max(64, "API token must contain at most 64 characters"),
-});
+import { fetchSettings, SettingsData, settingsDataSchema } from "../common.ts";
 
-type SettingsData = z.infer<typeof settingsDataSchema>;
+const fetchData = async (): Promise<SettingsData> => {
+  const settings = await fetchSettings();
+  if (settings === null) {
+    return {
+      token: "",
+    };
+  }
 
-const fetchData = async () => {
-  const defaultData: SettingsData = {
-    token: "",
-  };
-
-  const fetchedData: Partial<SettingsData> = await chrome.storage.local.get(
-    Object.keys(settingsDataSchema.shape),
-  );
-
-  return Object.assign(defaultData, fetchedData);
+  return settings;
 };
 
 export const Settings = () => {

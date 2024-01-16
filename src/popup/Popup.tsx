@@ -10,8 +10,12 @@ import {
   TabPanels,
   Tabs,
   Tooltip,
+  useBoolean,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { FiEdit3, FiPlusSquare, FiSettings } from "react-icons/fi";
+
+import { fetchSettings } from "../common.ts";
 
 const TABS = [
   {
@@ -26,9 +30,27 @@ const TABS = [
   },
 ];
 
+const openSettings = () => chrome.runtime.openOptionsPage();
+
 export const Popup = () => {
-  return (
-    <Container width="md" paddingX={0}>
+  const [isReady, setIsReady] = useBoolean(false);
+
+  useEffect(() => {
+    const validateSettings = async () => {
+      const settings = await fetchSettings();
+      if (settings === null) {
+        openSettings();
+        window.close();
+      }
+
+      setIsReady.on();
+    };
+
+    validateSettings().catch(console.error);
+  }, [setIsReady]);
+
+  return isReady ? (
+    <Container width="sm" paddingX={0}>
       <Tabs isFitted variant="enclosed-colored">
         <TabList mb="1em">
           {TABS.map(({ icon, name }) => (
@@ -47,7 +69,7 @@ export const Popup = () => {
               isRound
               variant="ghost"
               aria-label="Settings"
-              onClick={() => chrome.runtime.openOptionsPage()}
+              onClick={openSettings}
             />
           </Tooltip>
         </TabList>
@@ -60,5 +82,5 @@ export const Popup = () => {
         </TabPanels>
       </Tabs>
     </Container>
-  );
+  ) : null;
 };
