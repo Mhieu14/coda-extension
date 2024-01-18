@@ -17,11 +17,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
-import { fetchSettings, SettingsData, settingsDataSchema } from "../common.ts";
+import { fetchSettings } from "../common.ts";
+import { SettingsData, settingsDataSchema } from "../schemas.ts";
 
 const fetchData = async (): Promise<SettingsData> => {
   const settings = await fetchSettings();
-  if (settings === null) {
+  if (!settings) {
     return {
       token: "",
     };
@@ -67,7 +68,9 @@ export const Settings = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <VStack alignItems="flex-start" spacing={4}>
             <FormControl isInvalid={Boolean(errors.token)}>
-              <FormLabel htmlFor="token">API token</FormLabel>
+              <FormLabel htmlFor="token" fontSize="lg">
+                API token
+              </FormLabel>
               <InputGroup>
                 <Input
                   id="token"

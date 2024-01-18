@@ -1,13 +1,21 @@
-import { z } from "zod";
+import { extendTheme } from "@chakra-ui/react";
 
-export const settingsDataSchema = z.object({
-  token: z
-    .string()
-    .min(1, "API token must not be empty")
-    .max(64, "API token must contain at most 64 characters"),
+import {
+  Request,
+  Response,
+  SettingsData,
+  settingsDataSchema,
+} from "./schemas.ts";
+
+export const theme = extendTheme({
+  styles: {
+    global: {
+      "*": {
+        fontSize: "md",
+      },
+    },
+  },
 });
-
-export type SettingsData = z.infer<typeof settingsDataSchema>;
 
 export const fetchSettings = async (): Promise<SettingsData | null> => {
   const rawData = await chrome.storage.local.get(
@@ -19,4 +27,10 @@ export const fetchSettings = async (): Promise<SettingsData | null> => {
   }
 
   return safeParseResult.data;
+};
+
+export const sendMessage = async <R extends Request>(
+  request: R,
+): Promise<Response<R>> => {
+  return await chrome.runtime.sendMessage(request);
 };

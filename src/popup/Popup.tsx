@@ -1,86 +1,100 @@
+import { Center, Container, Spinner, Text, VStack } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+
+import { fetchSettings, sendMessage } from "../common.ts";
 import {
-  Container,
-  Heading,
-  HStack,
-  Icon,
-  IconButton,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  Tooltip,
-  useBoolean,
-} from "@chakra-ui/react";
-import { useEffect } from "react";
-import { FiEdit3, FiPlusSquare, FiSettings } from "react-icons/fi";
-
-import { fetchSettings } from "../common.ts";
-
-const TABS = [
-  {
-    icon: FiPlusSquare,
-    name: "Add page",
-    panel: Container,
-  },
-  {
-    icon: FiEdit3,
-    name: "Edit page",
-    panel: Container,
-  },
-];
-
-const openSettings = () => chrome.runtime.openOptionsPage();
+  GetCurrentPageRequest,
+  Page,
+  RequestType,
+  ResponseType,
+} from "../schemas.ts";
+import { PageInfo } from "./PageInfo.tsx";
 
 export const Popup = () => {
-  const [isReady, setIsReady] = useBoolean(false);
+  const [isReady, setIsReady] = useState(false);
+  const [isPageFetched, setIsPageFetched] = useState(false);
+
+  const [page, setPage] = useState<Page | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const validateSettings = async () => {
       const settings = await fetchSettings();
-      if (settings === null) {
-        openSettings();
+      if (!settings) {
+        chrome.runtime.openOptionsPage();
         window.close();
       }
 
-      setIsReady.on();
+      setIsReady(true);
     };
 
     validateSettings().catch(console.error);
-  }, [setIsReady]);
+  }, []);
 
-  return isReady ? (
-    <Container width="sm" paddingX={0}>
-      <Tabs isFitted variant="enclosed-colored">
-        <TabList mb="1em">
-          {TABS.map(({ icon, name }) => (
-            <Tab key={name}>
-              <HStack>
-                <Icon as={icon} />
-                <Heading as="h1" size="md">
-                  {name}
-                </Heading>
-              </HStack>
-            </Tab>
-          ))}
-          <Tooltip hasArrow label="Open settings page" margin={1}>
-            <IconButton
-              icon={<FiSettings />}
-              isRound
-              variant="ghost"
-              aria-label="Settings"
-              onClick={openSettings}
-            />
-          </Tooltip>
-        </TabList>
-        <TabPanels>
-          {TABS.map((tab) => (
-            <TabPanel key={tab.name}>
-              <tab.panel />
-            </TabPanel>
-          ))}
-        </TabPanels>
-      </Tabs>
+  useEffect(() => {
+    const fetchPage = async () => {
+      if (!isReady) {
+        return;
+      }
+
+      const settings = await fetchSettings();
+      if (!settings) {
+        return;
+      }
+
+      const response = await sendMessage<GetCurrentPageRequest>({
+        type: RequestType.GET_CURRENT_PAGE,
+      });
+
+      setIsPageFetched(true);
+
+      if (response.type === ResponseType.ERROR) {
+        setErrorMessage(response.message);
+        return;
+      }
+
+      setPage(response.page);
+    };
+
+    fetchPage().catch(console.error);
+  }, [isReady]);
+
+  const getChildren = () => {
+    if (!isReady) {
+      return null;
+    }
+
+    if (!isPageFetched) {
+      return (
+        <Center height="100vh">
+          <VStack spacing={4}>
+            <Text>Fetching page data</Text>
+            <Spinner size="xl" />
+          </VStack>
+        </Center>
+      );
+    }
+
+    if (page) {
+      return <PageInfo page={page} />;
+    }
+
+    if (errorMessage) {
+      return (
+        <Center height="100vh">
+          <Text width="75%" align="center">
+            {errorMessage}
+          </Text>
+        </Center>
+      );
+    }
+
+    return null;
+  };
+
+  return (
+    <Container width="sm" minH={40} paddingX={0}>
+      {getChildren()}
     </Container>
-  ) : null;
+  );
 };
