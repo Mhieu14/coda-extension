@@ -1,14 +1,14 @@
 import { Center, Container, Spinner, Text, VStack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
-import { fetchSettings, sendMessage } from "../common.ts";
+import { fetchSettings, sendMessage } from "../common";
 import { PageProvider } from "../context.tsx";
 import {
   GetCurrentPageRequest,
   Page,
   RequestType,
   ResponseType,
-} from "../schemas.ts";
+} from "../schemas";
 import { Main } from "./Main.tsx";
 
 export const Popup = () => {

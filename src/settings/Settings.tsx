@@ -17,8 +17,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
-import { fetchSettings } from "../common.ts";
-import { SettingsData, settingsDataSchema } from "../schemas.ts";
+import { fetchSettings } from "../common";
+import { SettingsData, settingsDataSchema } from "../schemas";
 
 const fetchData = async (): Promise<SettingsData> => {
   const settings = await fetchSettings();

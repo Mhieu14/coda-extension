@@ -1,5 +1,5 @@
-import { CodaSDK } from "./coda.ts";
-import { fetchSettings } from "./common.ts";
+import { CodaSDK } from "./coda";
+import { fetchSettings } from "./common";
 import {
   CreateSubpageRequest,
   ErrorResponse,
@@ -8,7 +8,7 @@ import {
   RequestType,
   Response,
   ResponseType,
-} from "./schemas.ts";
+} from "./schemas";
 
 chrome.runtime.onInstalled.addListener((details) => {
   console.log("Extension installed");

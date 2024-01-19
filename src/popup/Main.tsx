@@ -1,7 +1,7 @@
 import { Divider, VStack } from "@chakra-ui/react";
 
-import { Actions } from "./Actions.tsx";
-import { PageInfo } from "./PageInfo.tsx";
+import { Actions } from "./Actions";
+import { PageInfo } from "./PageInfo";
 
 export const Main = () => {
   return (

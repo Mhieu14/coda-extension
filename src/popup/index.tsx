@@ -2,7 +2,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 
-import { theme } from "../common.ts";
+import { theme } from "../common";
 import { Popup } from "./Popup";
 
 ReactDOM.createRoot(document.getElementById("app") as HTMLElement).render(

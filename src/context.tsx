@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext } from "react";
 
-import { Page } from "./schemas.ts";
+import { Page } from "./schemas";
 
 interface PageContextValue {
   page: Page;

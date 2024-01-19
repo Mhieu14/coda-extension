@@ -13,9 +13,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { sendMessage } from "../common.ts";
-import { usePage } from "../context.tsx";
-import { CreateSubpageRequest, RequestType, ResponseType } from "../schemas.ts";
+import { sendMessage } from "../../common";
+import { usePage } from "../../context.tsx";
+import { CreateSubpageRequest, RequestType, ResponseType } from "../../schemas";
 
 const createSubpageDataSchema = z.object({
   name: z
