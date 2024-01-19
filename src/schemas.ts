@@ -9,30 +9,37 @@ export const settingsDataSchema = z.object({
 
 export type SettingsData = z.infer<typeof settingsDataSchema>;
 
-export const pageSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-});
-
 export const resolveBrowserLinkResponseSchema = z.object({
-  resource: z
-    .object({
-      type: z.literal("page"),
-    })
-    .extend(pageSchema.shape),
+  resource: z.object({
+    type: z.literal("page"),
+    id: z.string(),
+    name: z.string(),
+    href: z.string().url(),
+  }),
 });
 
-export type Page = z.infer<typeof pageSchema>;
+export interface Page {
+  id: string;
+  name: string;
+  docId: string;
+}
 
 // Message passing
 
 export enum RequestType {
   GET_CURRENT_PAGE,
+  CREATE_SUBPAGE,
 }
 
 export enum ResponseType {
   ERROR,
+  SUCCESS,
   PAGE,
+}
+
+export interface ErrorResponse {
+  type: ResponseType.ERROR;
+  message: string;
 }
 
 export interface GetCurrentPageRequest {
@@ -44,13 +51,23 @@ export interface GetCurrentPageResponse {
   page: Page;
 }
 
-export interface ErrorResponse {
-  type: ResponseType.ERROR;
-  message: string;
+export interface CreateSubpageRequest {
+  type: RequestType.CREATE_SUBPAGE;
+  name: string;
+  docId: string;
+  parentPageId: string;
 }
 
-export type Request = GetCurrentPageRequest;
+export interface CreateSubpageResponse {
+  type: ResponseType.SUCCESS;
+}
+
+export type Request = GetCurrentPageRequest | CreateSubpageRequest;
 
 export type Response<R extends Request> =
   | ErrorResponse
-  | (R extends GetCurrentPageRequest ? GetCurrentPageResponse : never);
+  | (R extends GetCurrentPageRequest
+      ? GetCurrentPageResponse
+      : R extends CreateSubpageRequest
+        ? CreateSubpageResponse
+        : null);

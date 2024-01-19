@@ -71,6 +71,7 @@ export const Settings = () => {
               <FormLabel htmlFor="token" fontSize="lg">
                 API token
               </FormLabel>
+
               <InputGroup>
                 <Input
                   id="token"
@@ -78,6 +79,7 @@ export const Settings = () => {
                   type={show ? "text" : "password"}
                   {...register("token")}
                 />
+
                 <InputRightElement>
                   <IconButton
                     icon={show ? <FaRegEyeSlash /> : <FaRegEye />}
@@ -89,9 +91,16 @@ export const Settings = () => {
                   />
                 </InputRightElement>
               </InputGroup>
+
               <FormErrorMessage>{errors.token?.message}</FormErrorMessage>
             </FormControl>
-            <Button colorScheme="teal" type="submit" isDisabled={!isDirty}>
+
+            <Button
+              colorScheme="teal"
+              type="submit"
+              isDisabled={!isDirty}
+              alignSelf="flex-end"
+            >
               Submit
             </Button>
           </VStack>

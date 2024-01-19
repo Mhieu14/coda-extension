@@ -2,13 +2,14 @@ import { Center, Container, Spinner, Text, VStack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 import { fetchSettings, sendMessage } from "../common.ts";
+import { PageProvider } from "../context.tsx";
 import {
   GetCurrentPageRequest,
   Page,
   RequestType,
   ResponseType,
 } from "../schemas.ts";
-import { PageInfo } from "./PageInfo.tsx";
+import { Main } from "./Main.tsx";
 
 export const Popup = () => {
   const [isReady, setIsReady] = useState(false);
@@ -66,7 +67,7 @@ export const Popup = () => {
 
     if (!isPageFetched) {
       return (
-        <Center height="100vh">
+        <Center flexGrow={1}>
           <VStack spacing={4}>
             <Text>Fetching page data</Text>
             <Spinner size="xl" />
@@ -76,12 +77,16 @@ export const Popup = () => {
     }
 
     if (page) {
-      return <PageInfo page={page} />;
+      return (
+        <PageProvider page={page}>
+          <Main />
+        </PageProvider>
+      );
     }
 
     if (errorMessage) {
       return (
-        <Center height="100vh">
+        <Center flexGrow={1}>
           <Text width="75%" align="center">
             {errorMessage}
           </Text>
@@ -93,7 +98,14 @@ export const Popup = () => {
   };
 
   return (
-    <Container width="sm" minH={40} paddingX={0}>
+    <Container
+      width="sm"
+      minH={40}
+      paddingX={3}
+      paddingY={2}
+      centerContent
+      justifyContent="stretch"
+    >
       {getChildren()}
     </Container>
   );
