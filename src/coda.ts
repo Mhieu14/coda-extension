@@ -2,6 +2,7 @@ import {
   CreateSubpageRequest,
   Page,
   resolveBrowserLinkResponseSchema,
+  UpdatePageRequest,
 } from "./schemas";
 
 const BASE_URL = "https://coda.io/apis/v1";
@@ -16,7 +17,9 @@ export class CodaSDK {
     };
   }
 
-  resolveBrowserLink = async (url: string): Promise<Page | null> => {
+  resolveBrowserLink = async (
+    url: string,
+  ): Promise<Omit<Page, "tabId"> | null> => {
     console.info(`Resolving ${url}`);
 
     // Remove hash and query params
@@ -70,6 +73,23 @@ export class CodaSDK {
 
     const response = await fetch(`${BASE_URL}/docs/${docId}/pages`, {
       method: "POST",
+      headers: this.headers,
+      body,
+    });
+
+    if (!response.ok) {
+      throw new Error("Request error");
+    }
+  };
+
+  updatePage = async ({ docId, pageId, name, icon }: UpdatePageRequest) => {
+    const body = JSON.stringify({
+      name,
+      iconName: icon?.name,
+    });
+
+    const response = await fetch(`${BASE_URL}/docs/${docId}/pages/${pageId}`, {
+      method: "PUT",
       headers: this.headers,
       body,
     });

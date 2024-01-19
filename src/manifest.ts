@@ -27,5 +27,13 @@ export default defineManifest({
     service_worker: "src/background.ts",
     type: "module",
   },
+  content_scripts: [
+    {
+      matches: ["https://coda.io/*"],
+      js: ["src/content.ts"],
+      all_frames: false,
+      run_at: "document_start",
+    },
+  ],
   permissions: ["storage", "tabs"],
 });

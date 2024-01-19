@@ -4,7 +4,6 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
-  InputGroup,
   useToast,
   VStack,
 } from "@chakra-ui/react";
@@ -73,12 +72,13 @@ export const CreateSubpage = () => {
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     <form onSubmit={handleSubmit(onSubmit)}>
       <VStack alignItems="flex-start" spacing={4}>
-        <FormControl isInvalid={Boolean(errors.name)}>
-          <FormLabel htmlFor="name">Page name</FormLabel>
+        <FormControl
+          isInvalid={Boolean(errors.name)}
+          isRequired={!createSubpageDataSchema.shape.name.isOptional()}
+        >
+          <FormLabel>Page name</FormLabel>
 
-          <InputGroup>
-            <Input id="name" autoComplete="off" {...register("name")} />
-          </InputGroup>
+          <Input autoComplete="off" {...register("name")} />
 
           <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
         </FormControl>

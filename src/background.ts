@@ -8,6 +8,7 @@ import {
   RequestType,
   Response,
   ResponseType,
+  UpdatePageRequest,
 } from "./schemas";
 
 chrome.runtime.onInstalled.addListener((details) => {
@@ -55,6 +56,15 @@ const handleRequest = async <R extends Request>(
     case RequestType.CREATE_SUBPAGE:
       handler = handleCreateSubpageRequest as typeof handler;
       break;
+
+    case RequestType.UPDATE_PAGE:
+      handler = handleUpdatePageRequest as typeof handler;
+      break;
+
+    default:
+      throw new Error(
+        `Background script does not handle request type of ${request.type}`,
+      );
   }
 
   return await handler(request, codaSdk);
@@ -74,11 +84,12 @@ const handleGetCurrentPageRequest: RequestHandler<
   });
 
   const tab = tabs[0];
-  if (tab?.url === undefined) {
+  if (tab?.url === undefined || tab?.id === undefined) {
     throw new Error("Cannot get the currently active tab");
   }
 
   const tabUrl = tab.url;
+  const tabId = tab.id;
 
   const page = await codaSdk.resolveBrowserLink(tabUrl);
   if (!page) {
@@ -93,7 +104,10 @@ const handleGetCurrentPageRequest: RequestHandler<
 
   return {
     type: ResponseType.PAGE,
-    page,
+    page: {
+      ...page,
+      tabId,
+    },
   };
 };
 
@@ -102,6 +116,17 @@ const handleCreateSubpageRequest: RequestHandler<CreateSubpageRequest> = async (
   codaSdk,
 ) => {
   await codaSdk.createSubpage(request);
+
+  return {
+    type: ResponseType.SUCCESS,
+  };
+};
+
+const handleUpdatePageRequest: RequestHandler<UpdatePageRequest> = async (
+  request,
+  codaSdk,
+) => {
+  await codaSdk.updatePage(request);
 
   return {
     type: ResponseType.SUCCESS,

@@ -67,14 +67,14 @@ export const Settings = () => {
         {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
         <form onSubmit={handleSubmit(onSubmit)}>
           <VStack alignItems="flex-start" spacing={4}>
-            <FormControl isInvalid={Boolean(errors.token)}>
-              <FormLabel htmlFor="token" fontSize="lg">
-                API token
-              </FormLabel>
+            <FormControl
+              isInvalid={Boolean(errors.token)}
+              isRequired={!settingsDataSchema.shape.token.isOptional()}
+            >
+              <FormLabel fontSize="lg">API token</FormLabel>
 
               <InputGroup>
                 <Input
-                  id="token"
                   autoComplete="off"
                   type={show ? "text" : "password"}
                   {...register("token")}
