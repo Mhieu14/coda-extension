@@ -18,7 +18,7 @@ import { UpdatePage } from "./UpdatePage.tsx";
 type Action = "create" | "update";
 
 export const Actions = () => {
-  const [action, setAction] = useState<Action>("update");
+  const [action, setAction] = useState<Action>("create");
 
   return (
     <VStack spacing={2} width="100%" alignItems="stretch">

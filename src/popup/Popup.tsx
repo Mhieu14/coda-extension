@@ -9,7 +9,7 @@ import {
   RequestType,
   ResponseType,
 } from "../schemas";
-import { Main } from "./Main.tsx";
+import { Actions } from "./Actions";
 
 export const Popup = () => {
   const [isReady, setIsReady] = useState(false);
@@ -79,7 +79,7 @@ export const Popup = () => {
     if (page) {
       return (
         <PageProvider page={page}>
-          <Main />
+          <Actions />
         </PageProvider>
       );
     }
