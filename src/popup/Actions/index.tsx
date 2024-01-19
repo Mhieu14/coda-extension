@@ -1,11 +1,12 @@
 import {
   Button,
+  Heading,
   HStack,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
-  Text,
+  Spacer,
   VStack,
 } from "@chakra-ui/react";
 import { useState } from "react";
@@ -22,11 +23,18 @@ export const Actions = () => {
   return (
     <VStack spacing={2} width="100%" alignItems="stretch">
       <HStack>
-        <Text>Select an action</Text>
+        <Heading as="h2" fontSize="2xl">
+          {action === "create" && "Create subpage"}
+          {action === "update" && "Update page"}
+        </Heading>
+
+        <Spacer />
+
         <Menu autoSelect={false}>
           <MenuButton as={Button} rightIcon={<FiChevronDown />}>
             Actions
           </MenuButton>
+
           <MenuList>
             <MenuItem
               icon={<FiPlusSquare />}
@@ -34,6 +42,7 @@ export const Actions = () => {
             >
               Create subpage
             </MenuItem>
+
             <MenuItem icon={<FiEdit3 />} onClick={() => setAction("update")}>
               Update page
             </MenuItem>

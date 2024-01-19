@@ -3,7 +3,6 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Heading,
   Input,
   InputGroup,
   useToast,
@@ -71,34 +70,28 @@ export const CreateSubpage = () => {
   };
 
   return (
-    <>
-      <Heading as="h2" fontSize="2xl">
-        Create Subpage
-      </Heading>
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <VStack alignItems="flex-start" spacing={4}>
+        <FormControl isInvalid={Boolean(errors.name)}>
+          <FormLabel htmlFor="name">Page name</FormLabel>
 
-      {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <VStack alignItems="flex-start" spacing={4}>
-          <FormControl isInvalid={Boolean(errors.name)}>
-            <FormLabel htmlFor="name">Page name</FormLabel>
+          <InputGroup>
+            <Input id="name" autoComplete="off" {...register("name")} />
+          </InputGroup>
 
-            <InputGroup>
-              <Input id="name" autoComplete="off" {...register("name")} />
-            </InputGroup>
+          <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
+        </FormControl>
 
-            <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
-          </FormControl>
-
-          <Button
-            colorScheme="teal"
-            type="submit"
-            isDisabled={!isDirty}
-            alignSelf="flex-end"
-          >
-            Submit
-          </Button>
-        </VStack>
-      </form>
-    </>
+        <Button
+          colorScheme="teal"
+          type="submit"
+          isDisabled={!isDirty}
+          alignSelf="flex-end"
+        >
+          Submit
+        </Button>
+      </VStack>
+    </form>
   );
 };
