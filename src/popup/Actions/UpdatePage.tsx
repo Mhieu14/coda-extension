@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { sendMessage } from "../../common.ts";
-import { usePage } from "../../context.tsx";
+import { usePage } from "../../contexts/page.tsx";
 import {
   iconSchema,
   RequestType,

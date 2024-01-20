@@ -1,5 +1,4 @@
 import { CodaSDK } from "./coda";
-import { fetchSettings } from "./common";
 import {
   CreateSubpageRequest,
   ErrorResponse,

@@ -1,71 +1,13 @@
 import { Center, Container, Spinner, Text, VStack } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
 
-import { fetchSettings, sendMessage } from "../common";
-import { PageProvider } from "../context.tsx";
-import {
-  GetCurrentPageRequest,
-  Page,
-  RequestType,
-  ResponseType,
-} from "../schemas";
+import { usePage } from "../contexts/page.tsx";
 import { Actions } from "./Actions";
 
 export const Popup = () => {
-  const [isReady, setIsReady] = useState(false);
-  const [isPageFetched, setIsPageFetched] = useState(false);
-
-  const [page, setPage] = useState<Page | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  useEffect(() => {
-    const validateSettings = async () => {
-      const settings = await fetchSettings();
-      if (!settings) {
-        chrome.runtime.openOptionsPage();
-        window.close();
-      }
-
-      setIsReady(true);
-    };
-
-    validateSettings().catch(console.error);
-  }, []);
-
-  useEffect(() => {
-    const fetchPage = async () => {
-      if (!isReady) {
-        return;
-      }
-
-      const settings = await fetchSettings();
-      if (!settings) {
-        return;
-      }
-
-      const response = await sendMessage<GetCurrentPageRequest>({
-        type: RequestType.GET_CURRENT_PAGE,
-      });
-
-      setIsPageFetched(true);
-
-      if (response.type === ResponseType.ERROR) {
-        setErrorMessage(response.message);
-        return;
-      }
-
-      setPage(response.page);
-    };
-
-    fetchPage().catch(console.error);
-  }, [isReady]);
+  const { page, isFetched } = usePage();
 
   const getChildren = () => {
-    if (!isReady) {
-      return null;
-    }
-
-    if (!isPageFetched) {
+    if (!isFetched) {
       return (
         <Center flexGrow={1}>
           <VStack spacing={4}>
@@ -76,25 +18,17 @@ export const Popup = () => {
       );
     }
 
-    if (page) {
-      return (
-        <PageProvider page={page}>
-          <Actions />
-        </PageProvider>
-      );
-    }
-
-    if (errorMessage) {
+    if (!page) {
       return (
         <Center flexGrow={1}>
           <Text width="75%" align="center">
-            {errorMessage}
+            Cannot fetch page data from the current tab. Is it a Coda page?
           </Text>
         </Center>
       );
     }
 
-    return null;
+    return <Actions />;
   };
 
   return (

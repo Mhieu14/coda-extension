@@ -1,14 +1,5 @@
 import { z } from "zod";
 
-export const settingsDataSchema = z.object({
-  token: z
-    .string()
-    .min(1, "API token must not be empty")
-    .max(64, "API token must contain at most 64 characters"),
-});
-
-export type SettingsData = z.infer<typeof settingsDataSchema>;
-
 export const resolveBrowserLinkResponseSchema = z.object({
   resource: z.object({
     type: z.literal("page"),

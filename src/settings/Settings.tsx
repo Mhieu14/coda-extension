@@ -1,4 +1,6 @@
 import {
+  Alert,
+  AlertIcon,
   Button,
   Container,
   FormControl,
@@ -14,38 +16,41 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
-import { fetchSettings } from "../common";
-import { SettingsData, settingsDataSchema } from "../schemas";
-
-const fetchData = async (): Promise<SettingsData> => {
-  const settings = await fetchSettings();
-  if (!settings) {
-    return {
-      token: "",
-    };
-  }
-
-  return settings;
-};
+import {
+  SettingsData,
+  settingsDataSchema,
+  useSettings,
+} from "../contexts/settings.tsx";
 
 export const Settings = () => {
+  const { settings, isFetched } = useSettings();
+  const [submitted, setSubmitted] = useState(false);
+
   const {
     handleSubmit,
     register,
     reset,
     formState: { errors, isDirty },
   } = useForm<SettingsData>({
-    defaultValues: fetchData,
     resolver: zodResolver(settingsDataSchema),
   });
+
+  useEffect(() => {
+    if (isFetched && settings) {
+      reset(settings);
+    }
+  }, [isFetched, reset, settings]);
 
   const toast = useToast();
 
   const onSubmit = async (values: SettingsData) => {
     await chrome.storage.local.set(values);
+
+    setSubmitted(true);
 
     toast({
       title: "Saved",
@@ -59,10 +64,21 @@ export const Settings = () => {
 
   const [show, setShow] = useBoolean(false);
 
+  if (!isFetched) {
+    return null;
+  }
+
   return (
     <Container width="md" padding={4}>
       <VStack alignItems="stretch" spacing={4}>
         <Heading as="h1">Settings</Heading>
+
+        {!settings && !submitted && (
+          <Alert status="warning">
+            <AlertIcon />
+            Please configure before using the extension
+          </Alert>
+        )}
 
         {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
         <form onSubmit={handleSubmit(onSubmit)}>
