@@ -13,6 +13,7 @@ import { z } from "zod";
 
 import { sendMessage } from "../../common.ts";
 import { usePage } from "../../contexts/page.tsx";
+import { useSettings } from "../../contexts/settings.tsx";
 import {
   iconSchema,
   RequestType,
@@ -42,13 +43,14 @@ type UpdatePageData = z.infer<typeof updatePageDataSchema>;
 
 export const UpdatePage = () => {
   const { page } = usePage();
+  const { settings } = useSettings();
 
   const {
     control,
     handleSubmit,
     register,
     reset,
-    formState: { errors, isDirty },
+    formState: { errors, isDirty, isSubmitting },
   } = useForm<UpdatePageData>({
     resolver: zodResolver(updatePageDataSchema),
   });
@@ -56,10 +58,15 @@ export const UpdatePage = () => {
   const toast = useToast();
 
   const onSubmit = async (values: UpdatePageData) => {
+    if (!page || !settings) {
+      return;
+    }
+
     console.log(values);
 
-    const response = await sendMessage<UpdatePageRequest>({
+    const response = await sendMessage<UpdatePageRequest>(page.tabId, {
       type: RequestType.UPDATE_PAGE,
+      token: settings.token,
       docId: page.docId,
       pageId: page.id,
       ...values,
@@ -106,6 +113,7 @@ export const UpdatePage = () => {
           colorScheme="teal"
           type="submit"
           isDisabled={!isDirty}
+          isLoading={isSubmitting}
           alignSelf="flex-end"
         >
           Submit

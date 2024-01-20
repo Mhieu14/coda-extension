@@ -23,10 +23,6 @@ export default defineManifest({
     default_icon: "assets/icon/icon-48.png",
   },
   options_page: "settings.html",
-  background: {
-    service_worker: "src/background.ts",
-    type: "module",
-  },
   content_scripts: [
     {
       matches: ["https://coda.io/*"],

@@ -6,11 +6,11 @@ import {
   UseControllerProps,
 } from "react-hook-form";
 
+import { sendMessage } from "../../common.ts";
 import { usePage } from "../../contexts/page.tsx";
 import {
   Icon,
   RequestType,
-  Response,
   ResponseType,
   SearchIconsRequest,
 } from "../../schemas.ts";
@@ -21,13 +21,10 @@ interface SearchIconsProps<FormValues extends FieldValues = FieldValues>
     UseControllerProps<FormValues> {}
 
 const searchIcons = async (tabId: number, term: string): Promise<Icon[]> => {
-  const response: Response<SearchIconsRequest> = await chrome.tabs.sendMessage(
-    tabId,
-    {
-      type: RequestType.SEARCH_ICONS,
-      term,
-    },
-  );
+  const response = await sendMessage<SearchIconsRequest>(tabId, {
+    type: RequestType.SEARCH_ICONS,
+    term,
+  });
 
   if (response.type === ResponseType.ERROR) {
     throw new Error(response.message);
@@ -54,6 +51,10 @@ export const SearchIcons = <FormValues extends FieldValues = FieldValues>({
   });
 
   const { page } = usePage();
+
+  if (!page) {
+    return;
+  }
 
   return (
     <FormControl isInvalid={!!error} id={name}>

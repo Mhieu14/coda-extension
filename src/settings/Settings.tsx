@@ -16,7 +16,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
@@ -28,13 +28,12 @@ import {
 
 export const Settings = () => {
   const { settings, isFetched } = useSettings();
-  const [submitted, setSubmitted] = useState(false);
 
   const {
     handleSubmit,
     register,
     reset,
-    formState: { errors, isDirty },
+    formState: { errors, isDirty, isSubmitted },
   } = useForm<SettingsData>({
     resolver: zodResolver(settingsDataSchema),
   });
@@ -49,8 +48,6 @@ export const Settings = () => {
 
   const onSubmit = async (values: SettingsData) => {
     await chrome.storage.local.set(values);
-
-    setSubmitted(true);
 
     toast({
       title: "Saved",
@@ -73,7 +70,7 @@ export const Settings = () => {
       <VStack alignItems="stretch" spacing={4}>
         <Heading as="h1">Settings</Heading>
 
-        {!settings && !submitted && (
+        {!settings && !isSubmitted && (
           <Alert status="warning">
             <AlertIcon />
             Please configure before using the extension

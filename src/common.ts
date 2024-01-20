@@ -13,7 +13,8 @@ export const theme = extendTheme({
 });
 
 export const sendMessage = async <R extends Request>(
+  tabId: number,
   request: R,
 ): Promise<Response<R>> => {
-  return await chrome.runtime.sendMessage(request);
+  return await chrome.tabs.sendMessage(tabId, request);
 };

@@ -13,6 +13,7 @@ import { z } from "zod";
 
 import { sendMessage } from "../../common";
 import { usePage } from "../../contexts/page.tsx";
+import { useSettings } from "../../contexts/settings.tsx";
 import { CreateSubpageRequest, RequestType, ResponseType } from "../../schemas";
 
 const createSubpageDataSchema = z.object({
@@ -26,12 +27,13 @@ type CreateSubpageData = z.infer<typeof createSubpageDataSchema>;
 
 export const CreateSubpage = () => {
   const { page } = usePage();
+  const { settings } = useSettings();
 
   const {
     handleSubmit,
     register,
     reset,
-    formState: { errors, isDirty },
+    formState: { errors, isDirty, isSubmitting },
   } = useForm<CreateSubpageData>({
     defaultValues: {
       name: "",
@@ -42,8 +44,13 @@ export const CreateSubpage = () => {
   const toast = useToast();
 
   const onSubmit = async (values: CreateSubpageData) => {
-    const response = await sendMessage<CreateSubpageRequest>({
+    if (!page || !settings) {
+      return;
+    }
+
+    const response = await sendMessage<CreateSubpageRequest>(page.tabId, {
       type: RequestType.CREATE_SUBPAGE,
+      token: settings.token,
       docId: page.docId,
       parentPageId: page.id,
       ...values,
@@ -87,6 +94,7 @@ export const CreateSubpage = () => {
           colorScheme="teal"
           type="submit"
           isDisabled={!isDirty}
+          isLoading={isSubmitting}
           alignSelf="flex-end"
         >
           Submit

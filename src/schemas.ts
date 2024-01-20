@@ -26,7 +26,6 @@ export type Icon = z.infer<typeof iconSchema>;
 // Message passing
 
 export enum RequestType {
-  GET_CURRENT_PAGE = "GET_CURRENT_PAGE",
   CREATE_SUBPAGE = "CREATE_SUBPAGE",
   UPDATE_PAGE = "UPDATE_PAGE",
   SEARCH_ICONS = "SEARCH_ICONS",
@@ -35,7 +34,6 @@ export enum RequestType {
 export enum ResponseType {
   ERROR = "ERROR",
   SUCCESS = "SUCCESS",
-  PAGE = "PAGE",
   ICONS = "ICONS",
 }
 
@@ -44,17 +42,9 @@ export interface ErrorResponse {
   message: string;
 }
 
-export interface GetCurrentPageRequest {
-  type: RequestType.GET_CURRENT_PAGE;
-}
-
-export interface GetCurrentPageResponse {
-  type: ResponseType.PAGE;
-  page: Page;
-}
-
 export interface CreateSubpageRequest {
   type: RequestType.CREATE_SUBPAGE;
+  token: string;
   name: string;
   docId: string;
   parentPageId: string;
@@ -66,6 +56,7 @@ export interface CreateSubpageResponse {
 
 export interface UpdatePageRequest {
   type: RequestType.UPDATE_PAGE;
+  token: string;
   name?: string;
   icon?: Icon | null;
   docId: string;
@@ -87,19 +78,16 @@ export interface SearchIconsResponse {
 }
 
 export type Request =
-  | GetCurrentPageRequest
   | CreateSubpageRequest
   | UpdatePageRequest
   | SearchIconsRequest;
 
 export type Response<R extends Request> =
   | ErrorResponse
-  | (R extends GetCurrentPageRequest
-      ? GetCurrentPageResponse
-      : R extends CreateSubpageRequest
-        ? CreateSubpageResponse
-        : R extends UpdatePageRequest
-          ? UpdatePageResponse
-          : R extends SearchIconsRequest
-            ? SearchIconsResponse
-            : null);
+  | (R extends CreateSubpageRequest
+      ? CreateSubpageResponse
+      : R extends UpdatePageRequest
+        ? UpdatePageResponse
+        : R extends SearchIconsRequest
+          ? SearchIconsResponse
+          : null);
