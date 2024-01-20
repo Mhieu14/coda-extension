@@ -85,7 +85,7 @@ export const CreateSubpage = () => {
         >
           <FormLabel>Page name</FormLabel>
 
-          <Input autoComplete="off" {...register("name")} />
+          <Input autoFocus autoComplete="off" {...register("name")} />
 
           <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
         </FormControl>
