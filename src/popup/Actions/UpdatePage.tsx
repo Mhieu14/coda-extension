@@ -62,8 +62,6 @@ export const UpdatePage = () => {
       return;
     }
 
-    console.log(values);
-
     const response = await sendMessage<UpdatePageRequest>(page.tabId, {
       type: RequestType.UPDATE_PAGE,
       token: settings.token,

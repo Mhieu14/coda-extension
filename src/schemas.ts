@@ -1,14 +1,5 @@
 import { z } from "zod";
 
-export const resolveBrowserLinkResponseSchema = z.object({
-  resource: z.object({
-    type: z.literal("page"),
-    id: z.string(),
-    name: z.string(),
-    href: z.string().url(),
-  }),
-});
-
 export interface Page {
   id: string;
   name: string;
@@ -46,6 +37,7 @@ export interface CreateSubpageRequest {
   type: RequestType.CREATE_SUBPAGE;
   token: string;
   name: string;
+  icon?: Icon | null;
   docId: string;
   parentPageId: string;
 }

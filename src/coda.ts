@@ -1,9 +1,6 @@
-import {
-  CreateSubpageRequest,
-  Page,
-  resolveBrowserLinkResponseSchema,
-  UpdatePageRequest,
-} from "./schemas";
+import { z } from "zod";
+
+import type { CreateSubpageRequest, Page, UpdatePageRequest } from "./schemas";
 
 const BASE_URL = "https://coda.io/apis/v1";
 
@@ -20,7 +17,7 @@ export class CodaSDK {
   resolveBrowserLink = async (
     url: string,
   ): Promise<Omit<Page, "tabId"> | null> => {
-    console.info(`Resolving ${url}`);
+    console.log(`Resolving ${url}`);
 
     // Remove hash and query params
     const strippedUrl = url.split(/[?#]/)[0];
@@ -44,7 +41,7 @@ export class CodaSDK {
 
     const {
       resource: { id, name, href },
-    } = resolveBrowserLinkResponseSchema.parse(await response.json());
+    } = resolveBrowserLinkSchema.parse(await response.json());
 
     const match = href.match(/\/docs\/(\w+)\//);
     if (match === null) {
@@ -64,9 +61,11 @@ export class CodaSDK {
     docId,
     parentPageId,
     name,
+    icon,
   }: CreateSubpageRequest) => {
     const body = JSON.stringify({
       name,
+      iconName: icon?.name,
       parentPageId,
     });
 
@@ -98,3 +97,12 @@ export class CodaSDK {
     }
   };
 }
+
+export const resolveBrowserLinkSchema = z.object({
+  resource: z.object({
+    type: z.literal("page"),
+    id: z.string(),
+    name: z.string(),
+    href: z.string().url(),
+  }),
+});

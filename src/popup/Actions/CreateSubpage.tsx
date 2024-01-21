@@ -14,13 +14,24 @@ import { z } from "zod";
 import { sendMessage } from "../../common";
 import { usePage } from "../../contexts/page.tsx";
 import { useSettings } from "../../contexts/settings.tsx";
-import { CreateSubpageRequest, RequestType, ResponseType } from "../../schemas";
+import {
+  CreateSubpageRequest,
+  iconSchema,
+  RequestType,
+  ResponseType,
+} from "../../schemas";
+import { SearchIcons } from "./SearchIcons.tsx";
 
 const createSubpageDataSchema = z.object({
   name: z
     .string()
     .min(1, "Page name must not be empty")
     .max(256, "Page name must contain at most 256 characters"),
+
+  icon: iconSchema
+    .nullable()
+    .optional()
+    .transform((icon) => icon || undefined),
 });
 
 type CreateSubpageData = z.infer<typeof createSubpageDataSchema>;
@@ -30,14 +41,12 @@ export const CreateSubpage = () => {
   const { settings } = useSettings();
 
   const {
+    control,
     handleSubmit,
     register,
     reset,
     formState: { errors, isDirty, isSubmitting },
   } = useForm<CreateSubpageData>({
-    defaultValues: {
-      name: "",
-    },
     resolver: zodResolver(createSubpageDataSchema),
   });
 
@@ -89,6 +98,12 @@ export const CreateSubpage = () => {
 
           <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
         </FormControl>
+
+        <SearchIcons<CreateSubpageData>
+          name="icon"
+          control={control}
+          placeholder="Type to search for icons"
+        />
 
         <Button
           colorScheme="teal"
