@@ -8,7 +8,6 @@ const name = "Coda Extension";
 
 export default defineManifest({
   name: `${name}${isDev ? ` ➡️ Dev` : ""}`,
-  description: "Description",
   version: packageData.version,
   manifest_version: 3,
   icons: {
