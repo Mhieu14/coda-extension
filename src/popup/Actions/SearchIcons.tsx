@@ -69,6 +69,12 @@ export const SearchIcons = <FormValues extends FieldValues = FieldValues>({
         {...field}
         formatOptionLabel={(icon) => <FormatIcon icon={icon} />}
         getOptionValue={(icon) => icon.name}
+        chakraStyles={{
+          menu: (base) => ({
+            ...base,
+            paddingBottom: "8px",
+          }),
+        }}
       />
 
       <FormErrorMessage>{error?.message}</FormErrorMessage>
