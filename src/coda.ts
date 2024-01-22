@@ -27,13 +27,15 @@ export class CodaSDK {
       return null;
     }
 
-    const response = await fetch(
-      `${BASE_URL}/resolveBrowserLink?url=${strippedUrl}`,
-      {
-        method: "GET",
-        headers: this.headers,
-      },
-    );
+    const params = new URLSearchParams({
+      url: strippedUrl,
+      degradeGracefully: "true",
+    }).toString();
+
+    const response = await fetch(`${BASE_URL}/resolveBrowserLink?${params}`, {
+      method: "GET",
+      headers: this.headers,
+    });
 
     if (!response.ok) {
       return null;
@@ -43,7 +45,7 @@ export class CodaSDK {
       resource: { id, name, href },
     } = resolveBrowserLinkSchema.parse(await response.json());
 
-    const match = href.match(/\/docs\/(\w+)\//);
+    const match = href.match(/\/docs\/([^/]+)\//);
     if (match === null) {
       return null;
     }
