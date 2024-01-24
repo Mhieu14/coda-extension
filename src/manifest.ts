@@ -7,9 +7,10 @@ const isDev = process.env.NODE_ENV == "development";
 const name = "Coda Extension";
 
 export default defineManifest({
+  manifest_version: 3,
   name: `${name}${isDev ? ` ➡️ Dev` : ""}`,
   version: packageData.version,
-  manifest_version: 3,
+  description: "Empower non-Doc-Makers to create/update Coda pages.",
   icons: {
     16: "assets/icon/icon-16.png",
     32: "assets/icon/icon-32.png",
