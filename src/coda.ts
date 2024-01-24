@@ -16,7 +16,7 @@ export class CodaSDK {
 
   resolveBrowserLink = async (
     url: string,
-  ): Promise<Omit<Page, "tabId"> | null> => {
+  ): Promise<Omit<Page, "tabId"> | ResolveBrowserLinkError> => {
     console.log(`Resolving ${url}`);
 
     // Remove hash and query params
@@ -24,7 +24,9 @@ export class CodaSDK {
 
     const hostName = new URL(strippedUrl).hostname;
     if (hostName !== "coda.io") {
-      return null;
+      return {
+        message: "The extension only works in a Coda page tab.",
+      };
     }
 
     const params = new URLSearchParams({
@@ -38,7 +40,10 @@ export class CodaSDK {
     });
 
     if (!response.ok) {
-      return null;
+      const payload = (await response.json()) as ResolveBrowserLinkErrorPayload;
+      return {
+        message: payload?.message ?? "Request error.",
+      };
     }
 
     const {
@@ -47,7 +52,9 @@ export class CodaSDK {
 
     const match = href.match(/\/docs\/([^/]+)\//);
     if (match === null) {
-      return null;
+      return {
+        message: "Invalid response from Coda API.",
+      };
     }
 
     const docId = match[1];
@@ -108,3 +115,11 @@ export const resolveBrowserLinkSchema = z.object({
     href: z.string().url(),
   }),
 });
+
+interface ResolveBrowserLinkError {
+  message: string;
+}
+
+interface ResolveBrowserLinkErrorPayload {
+  message?: string;
+}

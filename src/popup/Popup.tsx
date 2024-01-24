@@ -4,7 +4,7 @@ import { usePage } from "../contexts/page.tsx";
 import { Actions } from "./Actions";
 
 export const Popup = () => {
-  const { page, isFetched } = usePage();
+  const { error, isFetched } = usePage();
 
   const getChildren = () => {
     if (!isFetched) {
@@ -18,11 +18,11 @@ export const Popup = () => {
       );
     }
 
-    if (!page) {
+    if (error) {
       return (
         <Center flexGrow={1}>
           <Text width="75%" align="center">
-            Cannot fetch page data from the current tab. Is it a Coda page?
+            {`Cannot fetch page data from the current tab. ${error.message}`}
           </Text>
         </Center>
       );

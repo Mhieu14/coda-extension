@@ -10,8 +10,13 @@ import { CodaSDK } from "../coda.ts";
 import { Page } from "../schemas.ts";
 import { useSettings } from "./settings.tsx";
 
+interface Error {
+  message: string;
+}
+
 interface PageContextValue {
   page?: Page;
+  error?: Error;
   isFetched: boolean;
 }
 
@@ -25,6 +30,7 @@ export const PageProvider = ({ children }: PageProviderProps) => {
   const { settings, isFetched: isSettingsFetched } = useSettings();
   const [isFetched, setIsFetched] = useState(false);
   const [page, setPage] = useState<Page>();
+  const [error, setError] = useState<Error>();
 
   useEffect(() => {
     const fetchPage = async () => {
@@ -52,18 +58,18 @@ export const PageProvider = ({ children }: PageProviderProps) => {
       const tabId = tab.id;
 
       const codaSdk = new CodaSDK(settings.token);
-      const page = await codaSdk.resolveBrowserLink(tabUrl);
+      const result = await codaSdk.resolveBrowserLink(tabUrl);
 
       setIsFetched(true);
 
-      if (!page) {
-        return;
+      if ("message" in result) {
+        setError(result);
+      } else {
+        setPage({
+          ...result,
+          tabId,
+        });
       }
-
-      setPage({
-        ...page,
-        tabId,
-      });
     };
 
     fetchPage().catch(console.error);
@@ -73,6 +79,7 @@ export const PageProvider = ({ children }: PageProviderProps) => {
     <PageContext.Provider
       value={{
         page,
+        error,
         isFetched,
       }}
     >
