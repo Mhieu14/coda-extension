@@ -3,6 +3,7 @@ import { z } from "zod";
 import { CodaSDK } from "./coda.ts";
 import {
   CreateSubpageRequest,
+  DeletePageRequest,
   ErrorResponse,
   iconSchema,
   Request,
@@ -46,6 +47,9 @@ const handleRequest = async <R extends Request>(
     case RequestType.UPDATE_PAGE:
       return (await handleUpdatePageRequest(request)) as _Response;
 
+    case RequestType.DELETE_PAGE:
+      return (await handleDeletePageRequest(request)) as _Response;
+
     case RequestType.SEARCH_ICONS:
       return (await handleSearchIconsRequest(request)) as _Response;
   }
@@ -71,6 +75,18 @@ const handleUpdatePageRequest: RequestHandler<UpdatePageRequest> = async (
   const codaSdk = new CodaSDK(request.token);
 
   await codaSdk.updatePage(request);
+
+  return {
+    type: ResponseType.SUCCESS,
+  };
+};
+
+const handleDeletePageRequest: RequestHandler<DeletePageRequest> = async (
+  request,
+) => {
+  const codaSdk = new CodaSDK(request.token);
+
+  await codaSdk.deletePage(request);
 
   return {
     type: ResponseType.SUCCESS,

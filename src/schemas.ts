@@ -19,6 +19,7 @@ export type Icon = z.infer<typeof iconSchema>;
 export enum RequestType {
   CREATE_SUBPAGE = "CREATE_SUBPAGE",
   UPDATE_PAGE = "UPDATE_PAGE",
+  DELETE_PAGE = "DELETE_PAGE",
   SEARCH_ICONS = "SEARCH_ICONS",
 }
 
@@ -69,9 +70,21 @@ export interface SearchIconsResponse {
   icons: Icon[];
 }
 
+export interface DeletePageRequest {
+  type: RequestType.DELETE_PAGE;
+  token: string;
+  docId: string;
+  pageId: string;
+}
+
+export interface DeletePageResponse {
+  type: ResponseType.SUCCESS;
+}
+
 export type Request =
   | CreateSubpageRequest
   | UpdatePageRequest
+  | DeletePageRequest
   | SearchIconsRequest;
 
 export type Response<R extends Request> =
@@ -80,6 +93,8 @@ export type Response<R extends Request> =
       ? CreateSubpageResponse
       : R extends UpdatePageRequest
         ? UpdatePageResponse
-        : R extends SearchIconsRequest
-          ? SearchIconsResponse
-          : null);
+        : R extends DeletePageRequest
+          ? DeletePageResponse
+          : R extends SearchIconsRequest
+            ? SearchIconsResponse
+            : null);

@@ -1,6 +1,11 @@
 import { z } from "zod";
 
-import type { CreateSubpageRequest, Page, UpdatePageRequest } from "./schemas";
+import type {
+  CreateSubpageRequest,
+  DeletePageRequest,
+  Page,
+  UpdatePageRequest,
+} from "./schemas";
 
 const BASE_URL = "https://coda.io/apis/v1";
 
@@ -99,6 +104,17 @@ export class CodaSDK {
       method: "PUT",
       headers: this.headers,
       body,
+    });
+
+    if (!response.ok) {
+      throw new Error("Request error");
+    }
+  };
+
+  deletePage = async ({ docId, pageId }: DeletePageRequest) => {
+    const response = await fetch(`${BASE_URL}/docs/${docId}/pages/${pageId}`, {
+      method: "DELETE",
+      headers: this.headers,
     });
 
     if (!response.ok) {
