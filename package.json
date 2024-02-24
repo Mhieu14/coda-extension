@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "format": "prettier --write src",
     "lint": "eslint --cache --fix src",
     "preview": "vite preview"
   },
@@ -17,20 +18,20 @@
     "framer-motion": "^10.18.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-hook-form": "^7.49.3",
+    "react-hook-form": "^7.50.1",
     "react-icons": "^5.0.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {
     "@crxjs/vite-plugin": "^1.0.14",
     "@types/chrome": "^0.0.256",
-    "@types/node": "^20.10.5",
-    "@types/react": "^18.2.47",
-    "@types/react-dom": "^18.2.18",
-    "@typescript-eslint/eslint-plugin": "^6.18.1",
-    "@typescript-eslint/parser": "^6.18.1",
-    "@vitejs/plugin-react-swc": "^3.5.0",
-    "eslint": "^8.56.0",
+    "@types/node": "^20.11.20",
+    "@types/react": "^18.2.58",
+    "@types/react-dom": "^18.2.19",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "@vitejs/plugin-react-swc": "^3.6.0",
+    "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
@@ -39,9 +40,9 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
     "eslint-plugin-simple-import-sort": "^10.0.0",
-    "eslint-plugin-unused-imports": "^3.0.0",
-    "prettier": "^3.2.2",
+    "eslint-plugin-unused-imports": "^3.1.0",
+    "prettier": "^3.2.5",
     "typescript": "^5.3.3",
-    "vite": "^5.0.11"
+    "vite": "^5.1.4"
   }
 }
