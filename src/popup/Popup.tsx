@@ -1,6 +1,7 @@
 import { Center, Container, Spinner, Text, VStack } from "@chakra-ui/react";
 
-import { usePage } from "../contexts/page.tsx";
+import { usePage } from "@/contexts/page.tsx";
+
 import { Actions } from "./Actions";
 
 export const Popup = () => {

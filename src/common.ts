@@ -1,6 +1,6 @@
 import { extendTheme } from "@chakra-ui/react";
 
-import { Request, Response } from "./schemas";
+import { Request, Response } from "./schemas.ts";
 
 export const theme = extendTheme({
   styles: {

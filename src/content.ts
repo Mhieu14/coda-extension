@@ -12,7 +12,7 @@ import {
   ResponseType,
   SearchIconsRequest,
   UpdatePageRequest,
-} from "./schemas";
+} from "./schemas.ts";
 
 chrome.runtime.onMessage.addListener((request: Request, _, sendResponse) => {
   handleRequest(request)

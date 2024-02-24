@@ -5,7 +5,7 @@ import type {
   DeletePageRequest,
   Page,
   UpdatePageRequest,
-} from "./schemas";
+} from "./schemas.ts";
 
 const BASE_URL = "https://coda.io/apis/v1";
 

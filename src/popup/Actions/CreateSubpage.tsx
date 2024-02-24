@@ -11,15 +11,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { sendMessage } from "../../common";
-import { usePage } from "../../contexts/page.tsx";
-import { useSettings } from "../../contexts/settings.tsx";
+import { sendMessage } from "@/common.ts";
+import { usePage } from "@/contexts/page.tsx";
+import { useSettings } from "@/contexts/settings.tsx";
 import {
   CreateSubpageRequest,
   iconSchema,
   RequestType,
   ResponseType,
-} from "../../schemas";
+} from "@/schemas.ts";
+
 import { SearchIcons } from "./SearchIcons.tsx";
 
 const createSubpageDataSchema = z.object({

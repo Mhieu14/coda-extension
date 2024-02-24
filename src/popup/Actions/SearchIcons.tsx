@@ -6,14 +6,15 @@ import {
   UseControllerProps,
 } from "react-hook-form";
 
-import { sendMessage } from "../../common.ts";
-import { usePage } from "../../contexts/page.tsx";
+import { sendMessage } from "@/common.ts";
+import { usePage } from "@/contexts/page.tsx";
 import {
   Icon,
   RequestType,
   ResponseType,
   SearchIconsRequest,
-} from "../../schemas.ts";
+} from "@/schemas.ts";
+
 import { FormatIcon } from "./FormatIcon.tsx";
 
 interface SearchIconsProps<FormValues extends FieldValues = FieldValues>

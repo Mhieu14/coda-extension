@@ -1,6 +1,6 @@
 import { HStack, Image, Text } from "@chakra-ui/react";
 
-import { Icon } from "../../schemas.ts";
+import { Icon } from "@/schemas.ts";
 
 interface FormatIconProps {
   icon: Icon;

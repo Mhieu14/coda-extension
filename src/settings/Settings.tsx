@@ -24,7 +24,7 @@ import {
   SettingsData,
   settingsDataSchema,
   useSettings,
-} from "../contexts/settings.tsx";
+} from "@/contexts/settings.tsx";
 
 export const Settings = () => {
   const { settings, isFetched } = useSettings();

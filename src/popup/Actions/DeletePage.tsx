@@ -8,10 +8,10 @@ import {
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 
-import { sendMessage } from "../../common.ts";
-import { usePage } from "../../contexts/page.tsx";
-import { useSettings } from "../../contexts/settings.tsx";
-import { DeletePageRequest, RequestType, ResponseType } from "../../schemas.ts";
+import { sendMessage } from "@/common.ts";
+import { usePage } from "@/contexts/page.tsx";
+import { useSettings } from "@/contexts/settings.tsx";
+import { DeletePageRequest, RequestType, ResponseType } from "@/schemas.ts";
 
 export const DeletePage = () => {
   const { page } = usePage();

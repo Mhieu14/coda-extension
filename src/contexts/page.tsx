@@ -6,8 +6,9 @@ import {
   useState,
 } from "react";
 
-import { CodaSDK } from "../coda.ts";
-import { Page } from "../schemas.ts";
+import { CodaSDK } from "@/coda.ts";
+import { Page } from "@/schemas.ts";
+
 import { useSettings } from "./settings.tsx";
 
 interface Error {

@@ -32,7 +32,7 @@ rules:
     - groups:
         - ["^\\u0000"]
         - ["^@?\\w"]
-        - ["^src/.*$"]
+        - ["^@/.*$"]
         - ["^\\."]
   simple-import-sort/exports: "error"
   unused-imports/no-unused-imports: "error"
