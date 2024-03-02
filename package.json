@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "format": "prettier --write src",
-    "lint": "eslint --cache --fix src",
+    "format": "prettier --write .",
+    "lint": "eslint --cache --fix .",
     "preview": "vite preview"
   },
   "dependencies": {
