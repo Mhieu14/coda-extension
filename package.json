@@ -1,7 +1,8 @@
 {
   "name": "coda-extension",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "type": "module",
+  "packageManager": "pnpm@9.5.0",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -23,7 +24,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@crxjs/vite-plugin": "^2.0.0-beta.23",
+    "@crxjs/vite-plugin": "^2.0.0-beta.28",
     "@types/chrome": "^0.0.256",
     "@types/node": "^20.11.20",
     "@types/react": "^18.2.58",
