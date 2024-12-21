@@ -80,6 +80,9 @@ export const Settings = () => {
     });
 
     reset(values);
+
+    // Reload the page content to reflect the transformed settings
+    window.location.reload();
   };
 
   const [showDefaultToken, setShowDefaultToken] = useBoolean();
@@ -100,12 +103,12 @@ export const Settings = () => {
 
           {/* Default Token */}
           <FormControl isInvalid={!!errors.token}>
-            <FormLabel>Default API Token</FormLabel>
+            <FormLabel>Default API Key</FormLabel>
             <InputGroup>
               <Input
                 {...register("token")}
                 type={showDefaultToken ? "text" : "password"}
-                placeholder="Enter your default API token"
+                placeholder="Enter your default API Key"
               />
               <InputRightElement>
                 <IconButton
@@ -124,7 +127,7 @@ export const Settings = () => {
           {/* Custom Tokens */}
           <Box>
             <HStack justifyContent="space-between" mb={4}>
-              <Heading size="md">Custom Document Tokens</Heading>
+              <Heading size="md">Custom Document Keys</Heading>
               <Button
                 leftIcon={<FaPlus />}
                 onClick={() => {
@@ -164,12 +167,12 @@ export const Settings = () => {
                 </FormControl>
 
                 <FormControl isInvalid={!!errors.customTokens?.[index]?.token}>
-                  <FormLabel>Custom API Token</FormLabel>
+                  <FormLabel>Document API Key</FormLabel>
                   <InputGroup>
                     <Input
                       {...register(`customTokens.${index}.token`)}
                       type={showCustomTokens[index] ? "text" : "password"}
-                      placeholder="Enter custom API token"
+                      placeholder="Enter document API Key"
                     />
                     <InputRightElement>
                       <IconButton
@@ -214,7 +217,7 @@ export const Settings = () => {
                   alignSelf="flex-start"
                   mb={4}
                 >
-                  Remove Custom Token
+                  Remove Custom Key
                 </Button>
               </VStack>
             ))}
