@@ -92,7 +92,7 @@ export const getTokenForUrl = (settings: SettingsData, url: string): string => {
 
   // First, check if there's a custom token for the exact URL
   const customToken = settings.customTokens?.find(
-    (custom) => new URL(custom.docUrl).origin === new URL(rootPageUrl).origin
+    (custom) => custom.docUrl === rootPageUrl
   );
 
   // If custom token found, return it
