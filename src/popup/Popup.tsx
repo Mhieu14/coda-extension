@@ -1,4 +1,11 @@
-import { Center, Container, Spinner, Text, VStack } from "@chakra-ui/react";
+import {
+  Center,
+  Container,
+  Spinner,
+  Text,
+  VStack,
+  Button,
+} from "@chakra-ui/react";
 
 import { usePage } from "@/contexts/page.tsx";
 
@@ -21,11 +28,19 @@ export const Popup = () => {
 
     if (error) {
       return (
-        <Center flexGrow={1}>
-          <Text width="75%" align="center">
-            {`Cannot fetch page data from the current tab. ${error.message}`}
-          </Text>
-        </Center>
+        <VStack spacing={4} width="100%" p={4}>
+          <Center flexGrow={1}>
+            <Text width="75%" align="center">
+              {`Cannot fetch page data from the current tab. ${error.message}`}
+            </Text>
+          </Center>
+          <Button
+            colorScheme="blue"
+            onClick={() => chrome.runtime.openOptionsPage()}
+          >
+            Go to Settings
+          </Button>
+        </VStack>
       );
     }
 
