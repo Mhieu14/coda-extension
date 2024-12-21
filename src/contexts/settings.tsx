@@ -87,8 +87,6 @@ export const useSettings = (): SettingsContextValue => {
 };
 
 export const getTokenForUrl = (settings: SettingsData, url: string): string => {
-  if (!settings || !url) return settings.token;
-
   const rootPageUrl = getRootPageUrl(url);
   if (!rootPageUrl) return settings.token;
 
