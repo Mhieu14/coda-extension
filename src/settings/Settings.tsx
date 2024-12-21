@@ -33,6 +33,9 @@ import {
 export const Settings = () => {
   const { settings, isFetched } = useSettings();
 
+  const [showDefaultToken, setShowDefaultToken] = useBoolean();
+  const [showCustomTokens, setShowCustomTokens] = useState<boolean[]>([]);
+
   const {
     handleSubmit,
     register,
@@ -55,8 +58,13 @@ export const Settings = () => {
   useEffect(() => {
     if (isFetched && settings) {
       reset(settings);
+
+      // Initialize showCustomTokens when settings are fetched
+      if (settings.customTokens?.length) {
+        setShowCustomTokens(settings.customTokens.map(() => false));
+      }
     }
-  }, [isFetched, reset, settings]);
+  }, [isFetched, reset, settings, setShowCustomTokens]);
 
   const toast = useToast();
 
@@ -85,9 +93,6 @@ export const Settings = () => {
     window.location.reload();
   };
 
-  const [showDefaultToken, setShowDefaultToken] = useBoolean();
-  const [showCustomTokens, setShowCustomTokens] = useState<boolean[]>([]);
-
   return (
     <Container maxW="container.md" py={8}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -103,7 +108,9 @@ export const Settings = () => {
 
           {/* Default Token */}
           <FormControl isInvalid={!!errors.token}>
-            <FormLabel>Default API Key</FormLabel>
+            <Heading size="md" mb={4}>
+              Default API Key
+            </Heading>
             <InputGroup>
               <Input
                 {...register("token")}
