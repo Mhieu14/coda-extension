@@ -18,7 +18,7 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { FaRegEye, FaRegEyeSlash, FaTrash, FaPlus } from "react-icons/fa";
 
@@ -83,6 +83,7 @@ export const Settings = () => {
   };
 
   const [showDefaultToken, setShowDefaultToken] = useBoolean();
+  const [showCustomTokens, setShowCustomTokens] = useState<boolean[]>([]);
 
   return (
     <Container maxW="container.md" py={8}>
@@ -126,7 +127,10 @@ export const Settings = () => {
               <Heading size="md">Custom Document Tokens</Heading>
               <Button
                 leftIcon={<FaPlus />}
-                onClick={() => append({ docUrl: "", token: "" })}
+                onClick={() => {
+                  setShowCustomTokens((prev) => [...prev, false]);
+                  append({ docUrl: "", token: "" });
+                }}
                 colorScheme="blue"
                 variant="outline"
               >
@@ -145,7 +149,9 @@ export const Settings = () => {
                 mb={4}
               >
                 <FormControl isInvalid={!!errors.customTokens?.[index]?.docUrl}>
-                  <FormLabel>Document URL</FormLabel>
+                  <FormLabel>
+                    Document URL (Any page URL within the document)
+                  </FormLabel>
                   <Input
                     {...register(`customTokens.${index}.docUrl`)}
                     placeholder="https://example.com/docs"
@@ -162,16 +168,29 @@ export const Settings = () => {
                   <InputGroup>
                     <Input
                       {...register(`customTokens.${index}.token`)}
-                      type="password"
+                      type={showCustomTokens[index] ? "text" : "password"}
                       placeholder="Enter custom API token"
                     />
                     <InputRightElement>
                       <IconButton
                         variant="ghost"
-                        aria-label="Remove Custom Token"
-                        icon={<FaTrash />}
-                        onClick={() => remove(index)}
-                        colorScheme="red"
+                        aria-label={
+                          showCustomTokens[index] ? "Hide token" : "Show token"
+                        }
+                        icon={
+                          showCustomTokens[index] ? (
+                            <FaRegEyeSlash />
+                          ) : (
+                            <FaRegEye />
+                          )
+                        }
+                        onClick={() =>
+                          setShowCustomTokens((prev) =>
+                            prev.map((value, i) =>
+                              i === index ? !value : value
+                            )
+                          )
+                        }
                       />
                     </InputRightElement>
                   </InputGroup>
@@ -181,6 +200,22 @@ export const Settings = () => {
                     </FormErrorMessage>
                   )}
                 </FormControl>
+
+                <Button
+                  leftIcon={<FaTrash />}
+                  onClick={() => {
+                    setShowCustomTokens((prev) =>
+                      prev.filter((_, i) => i !== index)
+                    );
+                    remove(index);
+                  }}
+                  colorScheme="red"
+                  variant="outline"
+                  alignSelf="flex-start"
+                  mb={4}
+                >
+                  Remove Custom Token
+                </Button>
               </VStack>
             ))}
           </Box>
