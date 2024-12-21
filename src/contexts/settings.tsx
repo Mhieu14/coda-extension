@@ -87,19 +87,15 @@ export const useSettings = (): SettingsContextValue => {
 };
 
 export const getTokenForUrl = (settings: SettingsData, url: string): string => {
-  console.log("Calling getTokenForUrl:", settings, url);
   if (!settings || !url) return settings.token;
 
   const rootPageUrl = getRootPageUrl(url);
   if (!rootPageUrl) return settings.token;
 
-  console.log("Root page URL:", rootPageUrl);
-
   // First, check if there's a custom token for the exact URL
   const customToken = settings.customTokens?.find(
     (custom) => new URL(custom.docUrl).origin === new URL(rootPageUrl).origin
   );
-  console.log("Found custom token:", customToken);
 
   // If custom token found, return it
   if (customToken) return customToken.token;
