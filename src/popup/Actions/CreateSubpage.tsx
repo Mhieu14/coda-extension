@@ -13,7 +13,7 @@ import { z } from "zod";
 
 import { sendMessage } from "@/common.ts";
 import { usePage } from "@/contexts/page.tsx";
-import { useSettings } from "@/contexts/settings.tsx";
+import { useSettings, getTokenForUrl } from "@/contexts/settings.tsx";
 import {
   CreateSubpageRequest,
   iconSchema,
@@ -60,7 +60,7 @@ export const CreateSubpage = () => {
 
     const response = await sendMessage<CreateSubpageRequest>(page.tabId, {
       type: RequestType.CREATE_SUBPAGE,
-      token: settings.token,
+      token: getTokenForUrl(settings, page.url),
       docId: page.docId,
       parentPageId: page.id,
       ...values,

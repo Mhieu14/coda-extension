@@ -9,7 +9,7 @@ import {
 import { CodaSDK } from "@/coda.ts";
 import { Page } from "@/schemas.ts";
 
-import { useSettings } from "./settings.tsx";
+import { useSettings, getTokenForUrl } from "./settings.tsx";
 
 interface Error {
   message: string;
@@ -58,7 +58,14 @@ export const PageProvider = ({ children }: PageProviderProps) => {
       const tabUrl = tab.url;
       const tabId = tab.id;
 
-      const codaSdk = new CodaSDK(settings.token);
+      const token = getTokenForUrl(settings, tabUrl);
+      if (!token) {
+        chrome.runtime.openOptionsPage();
+        window.close();
+        return;
+      }
+
+      const codaSdk = new CodaSDK(token);
       const result = await codaSdk.resolveBrowserLink(tabUrl);
 
       setIsFetched(true);

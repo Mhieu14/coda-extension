@@ -14,11 +14,15 @@ import {
   useBoolean,
   useToast,
   VStack,
+  HStack,
+  Box,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { useForm, useFieldArray } from "react-hook-form";
+import { FaRegEye, FaRegEyeSlash, FaTrash, FaPlus } from "react-icons/fa";
+
+import { getRootPageUrl } from "@/common.ts";
 
 import {
   SettingsData,
@@ -32,10 +36,20 @@ export const Settings = () => {
   const {
     handleSubmit,
     register,
+    control,
     reset,
     formState: { errors, isDirty, isSubmitted },
   } = useForm<SettingsData>({
     resolver: zodResolver(settingsDataSchema),
+    defaultValues: {
+      token: "",
+      customTokens: [],
+    },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "customTokens",
   });
 
   useEffect(() => {
@@ -47,10 +61,19 @@ export const Settings = () => {
   const toast = useToast();
 
   const onSubmit = async (values: SettingsData) => {
-    await chrome.storage.local.set(values);
+    const transformedValues = {
+      ...values,
+      customTokens:
+        values.customTokens?.map((custom) => ({
+          ...custom,
+          docUrl: getRootPageUrl(custom.docUrl) || custom.docUrl,
+        })) || [],
+    };
+    await chrome.storage.local.set(transformedValues);
 
     toast({
-      title: "Saved",
+      title: "Settings Saved",
+      description: "Your API token settings have been updated.",
       status: "success",
       duration: 2000,
       position: "top-right",
@@ -59,66 +82,114 @@ export const Settings = () => {
     reset(values);
   };
 
-  const [show, setShow] = useBoolean(false);
-
-  if (!isFetched) {
-    return null;
-  }
+  const [showDefaultToken, setShowDefaultToken] = useBoolean();
 
   return (
-    <Container width="md" padding={4}>
-      <VStack alignItems="stretch" spacing={4}>
-        <Heading as="h1">Settings</Heading>
+    <Container maxW="container.md" py={8}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <VStack spacing={6} align="stretch">
+          <Heading>Extension Settings</Heading>
 
-        {!settings && !isSubmitted && (
-          <Alert status="warning">
-            <AlertIcon />
-            Please configure before using the extension
-          </Alert>
-        )}
+          {!settings && !isSubmitted && (
+            <Alert status="warning">
+              <AlertIcon />
+              Please configure before using the extension
+            </Alert>
+          )}
 
-        {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <VStack alignItems="flex-start" spacing={4}>
-            <FormControl
-              isInvalid={Boolean(errors.token)}
-              isRequired={!settingsDataSchema.shape.token.isOptional()}
-            >
-              <FormLabel fontSize="lg">API token</FormLabel>
-
-              <InputGroup>
-                <Input
-                  autoComplete="off"
-                  type={show ? "text" : "password"}
-                  {...register("token")}
+          {/* Default Token */}
+          <FormControl isInvalid={!!errors.token}>
+            <FormLabel>Default API Token</FormLabel>
+            <InputGroup>
+              <Input
+                {...register("token")}
+                type={showDefaultToken ? "text" : "password"}
+                placeholder="Enter your default API token"
+              />
+              <InputRightElement>
+                <IconButton
+                  variant="ghost"
+                  aria-label={showDefaultToken ? "Hide token" : "Show token"}
+                  icon={showDefaultToken ? <FaRegEyeSlash /> : <FaRegEye />}
+                  onClick={setShowDefaultToken.toggle}
                 />
+              </InputRightElement>
+            </InputGroup>
+            {errors.token && (
+              <FormErrorMessage>{errors.token.message}</FormErrorMessage>
+            )}
+          </FormControl>
 
-                <InputRightElement>
-                  <IconButton
-                    icon={show ? <FaRegEyeSlash /> : <FaRegEye />}
-                    isRound
-                    variant="ghost"
-                    size="sm"
-                    aria-label={show ? "Hide API token" : "Show API token"}
-                    onClick={setShow.toggle}
+          {/* Custom Tokens */}
+          <Box>
+            <HStack justifyContent="space-between" mb={4}>
+              <Heading size="md">Custom Document Tokens</Heading>
+              <Button
+                leftIcon={<FaPlus />}
+                onClick={() => append({ docUrl: "", token: "" })}
+                colorScheme="blue"
+                variant="outline"
+              >
+                Add Custom Token
+              </Button>
+            </HStack>
+
+            {fields.map((field, index) => (
+              <VStack
+                key={field.id}
+                spacing={4}
+                align="stretch"
+                borderWidth={1}
+                p={4}
+                borderRadius="md"
+                mb={4}
+              >
+                <FormControl isInvalid={!!errors.customTokens?.[index]?.docUrl}>
+                  <FormLabel>Document URL</FormLabel>
+                  <Input
+                    {...register(`customTokens.${index}.docUrl`)}
+                    placeholder="https://example.com/docs"
                   />
-                </InputRightElement>
-              </InputGroup>
+                  {errors.customTokens?.[index]?.docUrl && (
+                    <FormErrorMessage>
+                      {errors.customTokens[index]?.docUrl?.message}
+                    </FormErrorMessage>
+                  )}
+                </FormControl>
 
-              <FormErrorMessage>{errors.token?.message}</FormErrorMessage>
-            </FormControl>
+                <FormControl isInvalid={!!errors.customTokens?.[index]?.token}>
+                  <FormLabel>Custom API Token</FormLabel>
+                  <InputGroup>
+                    <Input
+                      {...register(`customTokens.${index}.token`)}
+                      type="password"
+                      placeholder="Enter custom API token"
+                    />
+                    <InputRightElement>
+                      <IconButton
+                        variant="ghost"
+                        aria-label="Remove Custom Token"
+                        icon={<FaTrash />}
+                        onClick={() => remove(index)}
+                        colorScheme="red"
+                      />
+                    </InputRightElement>
+                  </InputGroup>
+                  {errors.customTokens?.[index]?.token && (
+                    <FormErrorMessage>
+                      {errors.customTokens[index]?.token?.message}
+                    </FormErrorMessage>
+                  )}
+                </FormControl>
+              </VStack>
+            ))}
+          </Box>
 
-            <Button
-              colorScheme="teal"
-              type="submit"
-              isDisabled={!isDirty}
-              alignSelf="flex-end"
-            >
-              Submit
-            </Button>
-          </VStack>
-        </form>
-      </VStack>
+          <Button type="submit" colorScheme="green" isDisabled={!isDirty}>
+            Save Settings
+          </Button>
+        </VStack>
+      </form>
     </Container>
   );
 };

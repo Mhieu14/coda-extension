@@ -5,6 +5,7 @@ export interface Page {
   name: string;
   docId: string;
   tabId: number;
+  url: string;
 }
 
 export const iconSchema = z.object({

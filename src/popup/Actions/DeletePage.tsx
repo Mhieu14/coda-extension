@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 
 import { sendMessage } from "@/common.ts";
 import { usePage } from "@/contexts/page.tsx";
-import { useSettings } from "@/contexts/settings.tsx";
+import { useSettings, getTokenForUrl } from "@/contexts/settings.tsx";
 import { DeletePageRequest, RequestType, ResponseType } from "@/schemas.ts";
 
 export const DeletePage = () => {
@@ -37,7 +37,7 @@ export const DeletePage = () => {
 
     const response = await sendMessage<DeletePageRequest>(page.tabId, {
       type: RequestType.DELETE_PAGE,
-      token: settings.token,
+      token: getTokenForUrl(settings, page.url),
       docId: page.docId,
       pageId: page.id,
     });

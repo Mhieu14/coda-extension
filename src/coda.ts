@@ -20,7 +20,7 @@ export class CodaSDK {
   }
 
   resolveBrowserLink = async (
-    url: string,
+    url: string
   ): Promise<Omit<Page, "tabId"> | ResolveBrowserLinkError> => {
     console.log(`Resolving ${url}`);
 
@@ -68,6 +68,7 @@ export class CodaSDK {
       id,
       name,
       docId,
+      url,
     };
   };
 

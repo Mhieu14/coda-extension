@@ -13,7 +13,7 @@ import { z } from "zod";
 
 import { sendMessage } from "@/common.ts";
 import { usePage } from "@/contexts/page.tsx";
-import { useSettings } from "@/contexts/settings.tsx";
+import { useSettings, getTokenForUrl } from "@/contexts/settings.tsx";
 import {
   iconSchema,
   RequestType,
@@ -65,7 +65,7 @@ export const UpdatePage = () => {
 
     const response = await sendMessage<UpdatePageRequest>(page.tabId, {
       type: RequestType.UPDATE_PAGE,
-      token: settings.token,
+      token: getTokenForUrl(settings, page.url),
       docId: page.docId,
       pageId: page.id,
       ...values,
