@@ -144,7 +144,7 @@ export const Settings = () => {
                 colorScheme="blue"
                 variant="outline"
               >
-                Add Custom Token
+                Add Custom Key
               </Button>
             </HStack>
 
