@@ -14,18 +14,19 @@ export const theme = extendTheme({
 
 export const sendMessage = async <R extends Request>(
   tabId: number,
-  request: R,
+  request: R
 ): Promise<Response<R>> => {
   return await chrome.tabs.sendMessage(tabId, request);
 };
 
 export const getRootPageUrl = (url: string) => {
-  // URL constructor is used to easily parse the URL components
-  // Example URL: https://coda.io/d/Filum-Task-Management_dwiwr75F9kd/Releases_suPXJ-wx#_lu4J7HAD
+  // Parse URL components using URL constructor
+  // Example: converts "https://coda.io/d/document-name_Random-Doc-String/page-name_Random-Page-String"
+  // to "https://coda.io/d/document-name_Random-Doc-String"
   try {
     const parsedUrl = new URL(url);
     // Use a regular expression to extract the root URL part, capturing only the base path up to the unique document identifier.
-    // This stops at the first occurrence of any subdirectory or section (like "Releases_suPXJ-wx") that comes after "/d/<document_id>".
+    // This stops at the first occurrence of any subdirectory or section (like "document-name_Random-Doc-String") that comes after "/d/".
     const regex = /^(.+?\/d\/[^\/]+)/;
     const match = parsedUrl.href.match(regex);
     if (match) {
@@ -34,7 +35,7 @@ export const getRootPageUrl = (url: string) => {
     // If no match is found, return null or an empty string
     return null;
   } catch (error) {
-    console.error('Invalid URL provided:', error);
+    console.error("Invalid URL provided:", error);
     return null;
   }
-}
+};
